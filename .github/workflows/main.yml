@@ -23,7 +23,6 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USER }}
           DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
-          cd src
           docker build -t $DOCKERHUB_USER/go-devops-test:latest .
           echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USER --password-stdin
           docker push $DOCKERHUB_USER/go-devops-test:latest
