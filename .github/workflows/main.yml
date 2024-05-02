@@ -1,51 +1,29 @@
-name: Godenowl CICD
+name: CI/CD Pipeline
 
 on:
-  workflow_dispatch:
   push:
     branches:
-      - "*"
-    paths:
-      - 'src/**'
-      - '.github/workflows/cicd.yml'
+      - master
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    name: Build
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v2
         with:
-          node-version: 20
+          node-version: '14'
 
-      - name: Install dependencies
-        run: npm install
-        working-directory: src
-
-      - name: Run tests
-        working-directory: src
-        id: test
-        run: |
-          if npm test; then
-            echo "result=success"
-          else
-            echo "result=failure"
-          fi
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKERHUB_USER }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build image
+      - name: Build and Push Docker Image
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USER }}
-          IMAGE_TAG: ${{ github.sha }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }}
         run: |
-          docker pull $DOCKERHUB_USERNAME/go-devops-test:base
-          cd src && docker build -t $DOCKERHUB_USER/go-devops-test:$IMAGE_TAG -f Dockerfile .
+          cd src
+          docker build -t $DOCKERHUB_USER/go-devops-test:latest .
+          echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USER --password-stdin
+          docker push $DOCKERHUB_USER/go-devops-test:latest
