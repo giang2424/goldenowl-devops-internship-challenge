@@ -1,44 +1,40 @@
-name: CI build
+name: Godenowl CICD
 
 on:
+  workflow_dispatch:
   push:
     branches:
-      - master
+      - "*"
+    paths:
+      - 'src/**'
+      - '.github/workflows/cicd.yml'
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
-
+    name: Build
     steps:
-      - name: Check out
-        uses: actions/checkout@v2
-      
-      - name: Set up Node
-        uses: actions/setup-node@v2
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: '14'
-      
+          node-version: 20
+
       - name: Install dependencies
         run: npm install
         working-directory: src
-        
-      - name: Test
+
+      - name: Run tests
+        working-directory: src
+        id: test
         run: |
           if npm test; then
-            echo "test success"
+            echo "result=success"
           else
-            echo "test failure"
-            exit 1
+            echo "result=failure"
           fi
-        working-directory: src
-      
-  build:
-    runs-on: ubuntu-latest
-    needs: test
-
-    steps:
-      - name: Check out
-        uses: actions/checkout@v2
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
@@ -46,11 +42,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USER }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push image
+      - name: Build image
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USER }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          docker build -t $DOCKERHUB_USERNAME/golden-owl-test:latest .
-          docker push $DOCKERHUB_USERNAME/golden-owl-test:latest
-
-
+          docker pull $DOCKERHUB_USERNAME/go-devops-test:base
+          cd src && docker build -t $DOCKERHUB_USER/go-devops-test:$IMAGE_TAG -f Dockerfile .
