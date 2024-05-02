@@ -3,7 +3,7 @@ name: CI build
 on:
   push:
     branches:
-      - master
+      - 'master'
 
 jobs:
   test:
@@ -43,12 +43,12 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USER }}
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build and push image
         env:
-          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
-          docker build -t $DOCKERHUB_USER/go-devops-testt:latest .
-          docker push $DOCKERHUB_USER/go-devops-test:latest
+          docker build -t $DOCKERHUB_USERNAME/go-devops-testt:latest .
+          docker push $DOCKERHUB_USERNAME/go-devops-test:latest
