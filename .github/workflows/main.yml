@@ -48,7 +48,7 @@ jobs:
 
       - name: Build and push image
         env:
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USER }}
+          DOCKERHUB_USER: ${{ secrets.DOCKERHUB_USER }}
         run: |
-          docker build -t $DOCKERHUB_USERNAME/go-devops-testt:latest .
-          docker push $DOCKERHUB_USERNAME/go-devops-test:latest
+          docker build -t $DOCKERHUB_USER/go-devops-testt:latest .
+          docker push $DOCKERHUB_USER/go-devops-test:latest
