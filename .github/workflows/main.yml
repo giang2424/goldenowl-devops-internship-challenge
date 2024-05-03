@@ -53,9 +53,10 @@ jobs:
       - name: Build and push image
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          IMAGE_TAG: ${{ github.sha }}
         run: |
-          # cd /home/runner/work/goldenowl-devops-internship-challenge/
-          # ls -la
+          docker pull $DOCKERHUB_USERNAME/go-devops-test:latest
+          cd src
           docker build -t "$DOCKERHUB_USERNAME/go-devops-test:latest" .
           docker push "$DOCKERHUB_USERNAME/go-devops-test:latest"
  
