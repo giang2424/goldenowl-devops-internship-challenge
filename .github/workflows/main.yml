@@ -50,6 +50,7 @@ jobs:
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
+          ls -l
           cd src && docker build -t "$DOCKERHUB_USERNAME/go-devops-test:latest" .
           docker push "$DOCKERHUB_USERNAME/go-devops-test:latest"
   deloy:
