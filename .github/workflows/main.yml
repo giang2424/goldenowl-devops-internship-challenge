@@ -45,6 +45,8 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+          run: | 
+            echo "${{ secrets.DOCKERHUB_USERNAME }}"
 
       - name: Build and push image
         env:
