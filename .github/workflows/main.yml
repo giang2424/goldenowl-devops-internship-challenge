@@ -55,4 +55,19 @@ jobs:
         run: |
           docker build -t $DOCKERHUB_USERNAME/go-devops-testt:latest .
           docker push $DOCKERHUB_USERNAME/go-devops-test:latest
-
+  deloy:
+    runs-on: ubuntu-latest
+    name: deploy
+    needs: [test, build]
+    if: github.ref == 'refs/heads/master'
+    environment:  ${{ github.ref_name }}
+    steps:
+      - name: Deploy to Google Cloud VM
+        env:
+          GCP_SERVICE_ACCOUNT_KEY: ${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
+        run: |
+          
+          echo "$GCP_SERVICE_ACCOUNT_KEY" > gcp-key.json
+          gcloud auth activate-service-account --key-file=gcp-key.json --project=iron-potion-399705
+          gcloud compute ssh instance-1 --zone=asia-southeast1-b --command "~/deploy.sh"
+          rm gcp-key.json
