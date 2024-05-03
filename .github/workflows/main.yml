@@ -1,9 +1,13 @@
-name: CI build
+name: CI/CD build
 
 on:
+  workflow_dispatch:
   push:
     branches:
-      - 'master'
+      - "*"
+    paths:
+      - 'src/**'
+      - '.github/workflows/cicd.yml'
       
 jobs:
   test:
@@ -50,8 +54,8 @@ jobs:
         env:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
-          cd /home/runner/work/goldenowl-devops-internship-challenge/
-          ls -la
+          # cd /home/runner/work/goldenowl-devops-internship-challenge/
+          # ls -la
           docker build -t "$DOCKERHUB_USERNAME/go-devops-test:latest" .
           docker push "$DOCKERHUB_USERNAME/go-devops-test:latest"
  
