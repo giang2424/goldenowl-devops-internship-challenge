@@ -51,7 +51,7 @@ jobs:
           DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
         run: |
           ls /data
-          cd ./src && docker build -t "$DOCKERHUB_USERNAME/go-devops-test:latest" .
+          docker build -t "$DOCKERHUB_USERNAME/go-devops-test:latest" .
           docker push "$DOCKERHUB_USERNAME/go-devops-test:latest"
   deloy:
     runs-on: ubuntu-latest
