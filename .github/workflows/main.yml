@@ -1,5 +1,9 @@
 name: CI/CD build
 
+env:
+  SA_KEY_JSON: ${{ secrets.GCP_SA_KEY_JSON }}
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+
 on:
   workflow_dispatch:
   push:
@@ -77,9 +81,11 @@ jobs:
             version: "290.0.1"
             SA_KEY_JSON: ${{ secrets.GCP_SA_KEY_JSON }}
             PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-        
+            
         - name: Build
-          run: gcloud builds submit --tag=gcr.io/$PROJECT_ID/$PROJECT_ID:latest
-  
+          run: echo  $PROJECT_ID && gcloud builds submit --tag gcr.io/$PROJECT_ID/go-devops-test:latest
+          working-directory: src
+          
         - name: Deploy
-          run: gcloud run deploy $PROJECT_ID --image gcr.io/$PROJECT_ID/$PROJECT_ID:latest --platform managed --region us-west4 --allow-unauthenticated
+          run: gcloud run deploy $PROJECT_ID --image gcr.io/$PROJECT_ID/go-devops-test:latest --platform managed --region us-west4
+          working-directory: src
