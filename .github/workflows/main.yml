@@ -70,7 +70,7 @@ jobs:
         - name: Deploy to Cloud Run
           uses: actions/checkout@v2
         
-        - name: Set up Node
+        - name: Set up GCLoud CLI
           uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
           with:
             version: "290.0.1"
@@ -81,5 +81,5 @@ jobs:
           run: gcloud builds submit --tag gcr.io/$PROJECT_ID/$PROJECT_ID:$GITHUB_SHA
           
         - name: Deploy
-          run: gcloud run deploy $PROJECT_ID --image gcr.io/$PROJECT_ID/$PROJECT_ID:$GITHUB_SHA --platform managed --region us-east1
+          run: gcloud run deploy $PROJECT_ID --image gcr.io/$PROJECT_ID/$PROJECT_ID:$GITHUB_SHA --platform managed --region us-west4-a
           
