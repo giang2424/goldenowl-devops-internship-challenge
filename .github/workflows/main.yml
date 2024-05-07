@@ -79,7 +79,7 @@ jobs:
             PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
             
         - name: Build
-          run: gcloud builds submit --tag gcr.io/$PROJECT_ID:$GITHUB_SHA
+          run: gcloud builds submit --tag gcr.io/$PROJECT_ID:$GITHUB_SHA --source ./src/Dockerfile
           working-directory: src
           
         - name: Deploy
