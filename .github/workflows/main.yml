@@ -64,43 +64,23 @@ jobs:
 
   deploy:
       runs-on: self-hosted
+      needs: [build, test]
+      
       steps:
-      - name: Checkout
-        uses: actions/checkout@v4.1.1
-
-      - name: Authenticate with Google Cloud
-        uses: google-github-actions/auth@v2
-        with:
-          SA_KEY_JSON: "${{ secrets.GCP_SA_KEY_JSON }}"
-
-      - name: Set up Cloud SDK
-        uses: google-github-actions/setup-gcloud@v2
-
-      - name: Install kubectl
-        run: gcloud components install kubectl
-
-      - name: Check kubectl version
-        run: kubectl version --client
-
-      - name: Use gcloud CLI
-        run: gcloud info
-
-      - name: Docker auth
-        run: gcloud auth configure-docker us-west4-docker.pkg.dev --quiet
-
-      - name: Set version
-        id: version
-        #run: echo "::set-output name=VERSION::$(git rev-parse --short HEAD)"
-        run: echo "VERSION=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
-
-
-      - name: Build and push the docker image
-        env:
-          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-          VERSION: ${{ steps.version.outputs.VERSION }}
-        run: |
-          DOCKER_IMAGE="us-west2-docker.pkg.dev/${PROJECT_ID}/devops/:${VERSION}"
-          gcloud auth configure-docker us-west4-a-docker.pkg.dev
-          docker build -t $DOCKER_IMAGE .
-          docker push $DOCKER_IMAGE
+        - name: Deploy to Cloud Run
+          uses: actions/checkout@v2
+        
+        - name: Set up GCLoud CLI
+          uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+          with:
+            version: "290.0.1"
+            SA_KEY_JSON: ${{ secrets.GCP_SA_KEY_JSON }}
+            PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        
+        - name: Build
+          run: gcloud builds submit --tag gcr.io/$PROJECT_ID/$PROJECT_ID:$IMAGE_TAG
+          working-directory: src
           
+        - name: Deploy
+          run: gcloud run deploy $PROJECT_ID --image gcr.io/$PROJECT_ID/$PROJECT_ID:$IMAGE_TAG --platform managed --region us-east1
+          working-directory: src
