@@ -63,15 +63,15 @@ jobs:
       
 
   deploy:
-      runs-on: ubuntu-latest
-      needs: test
+      runs-on: self-hosted
+      needs: [build, test]
       
       steps:
         - name: Deploy to Cloud Run
           uses: actions/checkout@v2
         
         - name: Set up GCLoud CLI
-          uses: GoogleCloudPlatform/github-actions/setup-gcloud@v0
+          uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
           with:
             version: "290.0.1"
             SA_KEY_JSON: ${{ secrets.GCP_SA_KEY_JSON }}
