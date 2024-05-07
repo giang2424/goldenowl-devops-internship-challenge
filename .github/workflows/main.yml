@@ -79,7 +79,8 @@ jobs:
             PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
         
         - name: Build
-          run: gcloud builds submit --tag=gcr.io/$PROJECT_ID:$GITHUB_SHA
+          # run: gcloud builds submit --tag=gcr.io/$PROJECT_ID:$GITHUB_SHA
+          run: gcloud builds submit "https://github.com/giang2424/goldenowl-devops-internship-challenge" --git-source-revision=features --config=main.yaml
   
         - name: Deploy
           run: gcloud run deploy $PROJECT_ID --image gcr.io/$PROJECT_ID:$GITHUB_SHA --platform managed --region us-west4-a --allow-unauthenticated
