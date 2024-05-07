@@ -87,5 +87,5 @@ jobs:
           working-directory: src
           
         - name: Deploy
-          run: gcloud run deploy $PROJECT_ID --image gcr.io/$PROJECT_ID/go-devops-test:latest --platform managed --region us-west-4 --allow-unauthenticated
+          run: gcloud run deploy $PROJECT_ID --image gcr.io/$PROJECT_ID/go-devops-test:latest --platform managed --region us-west4 --allow-unauthenticated
           working-directory: src
