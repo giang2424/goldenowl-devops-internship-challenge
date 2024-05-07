@@ -80,10 +80,10 @@ jobs:
             
         - name: Build and push the docker image
           env:
-            GOOGLE_PROJECT: ${{ secrets.GCP_PROJECT_ID }}
+            PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
             VERSION: ${{ steps.version.outputs.VERSION }}
           run: |
-            DOCKER_IMAGE="us-west2-docker.pkg.dev/${GOOGLE_PROJECT}/devops/dnnq2012:${VERSION}"
+            DOCKER_IMAGE="us-west4-a-docker.pkg.dev/${PROJECT_ID}/devops/dnnq2012:${VERSION}"
             gcloud auth configure-docker us-west4-a-docker.pkg.dev
             docker build -t $DOCKER_IMAGE .
             docker push $DOCKER_IMAGE
