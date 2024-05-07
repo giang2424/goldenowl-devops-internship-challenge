@@ -79,9 +79,7 @@ jobs:
             PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
         
         - name: Build
-          run: gcloud builds submit --tag gcr.io/$PROJECT_ID/Devops:$github.sha
-          working-directory: src
-          
+          run: gcloud builds submit --tag gcr.io/$PROJECT_ID:$GITHUB_SHA
+  
         - name: Deploy
-          run: gcloud run deploy $PROJECT_ID --image gcr.io/$PROJECT_ID/$PROJECT_ID:$github.sha --platform managed --region us-west4-a
-          working-directory: src
+          run: gcloud run deploy $PROJECT_ID --image gcr.io/$PROJECT_ID:$GITHUB_SHA --platform managed --region us-west4-a --allow-unauthenticated
