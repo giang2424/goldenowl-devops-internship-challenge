@@ -62,4 +62,24 @@ jobs:
         working-directory: src
       
 
- 
+  deploy:
+      runs-on: ubuntu-latest
+      needs: test
+      
+      steps:
+        - name: Deploy to Cloud Run
+          uses: actions/checkout@v2
+        
+        - name: Set up Node
+          uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
+          with:
+            version: "290.0.1"
+            SA_KEY_JSON: ${{ secrets.GCP_SA_KEY_JSON }}
+            PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+        
+        - name: Build
+          run: gcloud builds submit --tag gcr.io/$PROJECT_ID/$PROJECT_ID:$GITHUB_SHA
+          
+        - name: Deploy
+          run: gcloud run deploy $PROJECT_ID --image gcr.io/$PROJECT_ID/$PROJECT_ID:$GITHUB_SHA --platform managed --region us-east1
+          
