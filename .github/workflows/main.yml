@@ -73,6 +73,7 @@ jobs:
         - name: Set up GCLoud CLI
           uses: google-github-actions/auth@v2
           with:
+            credentials_json: "${{ secrets.GCP_SA_KEY_JSON }}"
             version: "290.0.1"
             SA_KEY_JSON: ${{ secrets.GCP_SA_KEY_JSON }}
             PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
