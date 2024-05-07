@@ -79,9 +79,9 @@ jobs:
             PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
             
         - name: Build
-          run: gcloud builds submit --tag gcr.io/$PROJECT_ID/go-devops-test:latest
+          run: gcloud builds submit --tag gcr.io/celtic-acumen-422115-r4/go-devops-test:latest
           working-directory: src
           
         - name: Deploy
-          run: gcloud run deploy $PROJECT_ID --image gcr.io/$PROJECT_ID:$GITHUB_SHA --platform managed --region us-west-4 --allow-unauthenticated
+          run: gcloud run deploy $PROJECT_ID --image gcr.io/celtic-acumen-422115-r4:$GITHUB_SHA --platform managed --region us-west-4 --allow-unauthenticated
           working-directory: src
