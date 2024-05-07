@@ -84,6 +84,6 @@ jobs:
             VERSION: ${{ steps.version.outputs.VERSION }}
           run: |
             DOCKER_IMAGE="us-west2-docker.pkg.dev/${GOOGLE_PROJECT}/devops/dnnq2012:${VERSION}"
-            gcloud auth configure-docker us-us-west4-a-docker.pkg.dev
+            gcloud auth configure-docker us-west4-a-docker.pkg.dev
             docker build -t $DOCKER_IMAGE .
             docker push $DOCKER_IMAGE
